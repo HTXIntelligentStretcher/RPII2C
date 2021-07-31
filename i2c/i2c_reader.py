@@ -6,9 +6,11 @@ import time
 
 def read_from_rpi_to_esp32(addr, register):
   # change 1 of SMBus(1) to bus number on your RPI
+  print("Sending to ", addr, "register", register)
   smbus = SMBus(1)
   # prepare the data
   packed = None
+
   with Packer() as packer:
     packer.write(register)
     packer.write(0x02)
@@ -16,6 +18,7 @@ def read_from_rpi_to_esp32(addr, register):
     packed = packer.read()
 
   raw_list = None
+  print(packed)
   smbus.write_bytes(addr, bytearray(packed))
   time.sleep(0.3)  # wait i2c process the request
   first = smbus.read_byte(addr)
@@ -23,7 +26,6 @@ def read_from_rpi_to_esp32(addr, register):
   raw_list = list(smbus.read_bytes(addr, data_length - 2))  # the read_bytes contains the data format: first, length, data, crc8, end bytes
   raw_list.insert(0, data_length)
   raw_list.insert(0, first)
-  print(raw_list)
 
   # let's clean received data
   unpacked = None
@@ -31,8 +33,9 @@ def read_from_rpi_to_esp32(addr, register):
       unpacker.write(raw_list)
       unpacked = unpacker.read()
   assert unpacked[0] == register
-  return unpacked[1:]
+  print(unpacked[1:])
+  return bytearray(unpacked[1:])
 
 
 if __name__ == "__main__":
-  print(read_from_rpi_to_esp32(0x04, 0x01))
+  print(read_from_rpi_to_esp32(0x06, 0x01))

@@ -29,6 +29,16 @@ def sendBytes(addr, registerCode, bytess):
       # print("packed: ", packed)
       smbus.write_bytes(addr, bytearray(packed))
 
-bytess = [0x01, 0x02]
-
-sendBytes(0x04, 0x01, bytess)
+if __name__ == "__main__":
+  failure = 0
+  success = 0
+  bytess = [0x01]
+  while True:
+    try:
+      sendBytes(0x04, 0x01, bytess)
+      success += 1
+    except (OSError, Exception) as e:
+      failure += 1
+    finally:
+      print("success", success)
+      print("failure", failure)
