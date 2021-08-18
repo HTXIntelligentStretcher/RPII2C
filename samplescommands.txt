@@ -1,0 +1,2 @@
+mosquitto_pub -m '{"heightcommand": "up"}' -t actuator/linear
+mosquitto_pub -m '{"powerAssCommand": "on"}' -t actuator/assist

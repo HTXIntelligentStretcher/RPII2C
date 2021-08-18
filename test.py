@@ -1,5 +1,7 @@
-import struct
-a = bytearray([62, 148, 122, 225])
-print(a)
-b = struct.unpack('f', a)
-print(b)
+a = []
+
+def test(a):
+  for _ in a:
+    yield _
+
+print(list(test(a)))

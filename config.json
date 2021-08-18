@@ -9,10 +9,33 @@
     "slave_addr": "0x06",
     "weight_register": "0x01"
   },
+  "power_assist":
+  {
+    "power_assist_topic": "actuator/assist",
+    "slave_addr": "0x05",
+    "servo_register": "0x01",
+    "cmd_mapping":
+    { 
+      "powerAssCommand":
+      { 
+        "off": "0x00" ,
+        "on": "0x01" 
+      }
+    }
+  },
   "linear_actuator":
   {
     "actuation_topic": "actuator/linear",
     "slave_addr": "0x04",
-    "actuation_register": "0x01"
+    "actuation_register": "0x01",
+    "cmd_mapping":
+    { 
+      "heightCommand":
+      { 
+        "stop": "0x00" ,
+        "down": "0x01" ,
+        "up": "0x02"
+      }
+    }
   }
 }

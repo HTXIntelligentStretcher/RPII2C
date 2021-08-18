@@ -4,6 +4,7 @@ from Raspberry_Pi_Master_for_ESP32_I2C_SLAVE.unpacker import Unpacker
 from Raspberry_Pi_Master_for_ESP32_I2C_SLAVE.packer import Packer
 from adafruit_extended_bus import ExtendedI2C as I2C
 import math
+import json
 
 def sendBytes(addr, registerCode, bytess):
   max_packet_length = 124
@@ -28,6 +29,16 @@ def sendBytes(addr, registerCode, bytess):
       packed = packer.read()
       # print("packed: ", packed)
       smbus.write_bytes(addr, bytearray(packed))
+      print("Bytes written")
+
+def map_to_cmds(userdata, payload):
+  given_cmds = json.loads(payload)
+  for given_cmd in given_cmds.items():
+    if given_cmd[0] not in userdata["cmd_mapping"].keys():
+      yield 0x00
+    for cmd_type in userdata["cmd_mapping"][given_cmd[0]].items():
+      if cmd_type[0] == given_cmd[1]:
+        yield int(cmd_type[1], 16)
 
 if __name__ == "__main__":
   failure = 0
@@ -35,7 +46,7 @@ if __name__ == "__main__":
   bytess = [0x01]
   while True:
     try:
-      sendBytes(0x04, 0x01, bytess)
+      sendBytes(0x06, 0x01, bytess)
       success += 1
     except (OSError, Exception) as e:
       failure += 1
